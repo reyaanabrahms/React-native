@@ -1,0 +1,29 @@
+[
+    {
+        "id": "1",
+        "name": "MGlolenstine",
+        "currently_reading": "4",
+        "books_read": {
+            "1": {
+                "time_spent": 12343,
+                "completed": true,
+                "rating": 5
+            },
+            "2": {
+                "time_spent": 12343,
+                "completed": false,
+                "rating": 5
+            },
+            "3": {
+                "time_spent": 12343,
+                "completed": true,
+                "rating": 5
+            },
+            "4": {
+                "time_spent": 12343,
+                "completed": false,
+                "rating": 5
+            }
+        }
+    }
+]
