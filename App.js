@@ -6,11 +6,60 @@ import React from 'react';
 export default function App() {
   return (
     <View style={styles.container}>
+      <User></User>
       <Text>Book collection</Text>
       <SearchBar></SearchBar>
       <StatusBar style="auto" />
     </View>
   );
+}
+
+class User extends React.Component {
+  render() {
+    let user = users[0];
+    let book_id = user.currently_reading;
+    let book = all_books.filter(book => {
+      return book.id == book_id;
+    })[0];
+
+    console.log(user.books_read);
+    let read_books = Object.keys(user.books_read).map((a) => {
+      return Number(a);
+    });
+    console.log(read_books);
+
+    let read_books_objects = all_books.filter(book => {
+      return read_books.includes(book.id);
+    });
+    let pages_read = 0;
+    console.log(read_books_objects);
+    for (let a of read_books_objects) {
+      pages_read += a.pages;
+    }
+
+    let average_pages_read = pages_read/read_books.length;
+
+    if (book == undefined) {
+      return (
+        <View style={styles.searchBar}>
+          <Text>{user.name}</Text>
+          <Text>All pages read: {pages_read}</Text>
+          <Text>Avg pages read: {average_pages_read}</Text>
+          <Text>Not reading a book right now.</Text>
+        </View>
+      );
+    } else {
+      console.log(book);
+      return (
+        <View style={styles.searchBar}>
+          <Text>{user.name}</Text>
+          <Text>All pages read: {pages_read}</Text>
+          <Text>Avg pages read: {average_pages_read}</Text>
+          <Book key={book_id} book={book}></Book>
+        </View>
+      );
+    }
+  }
 }
 
 class SearchBar extends React.Component {
@@ -71,21 +120,28 @@ class Book extends React.Component {
   render() {
     let desc_display = this.state.show ? "block" : "none";
     return (
-      <View style={{ "grid-template-columns": "100px 1fr", display: "grid" }}>
+      <View style={{ gridTemplateColumns: "100px 1fr", display: "grid" }}>
         <img style={{ width: 100, height: 150 }} src={this.props.book.cover}></img>
-        <div style={{ "padding-left": "2rem" }}>
-          <h3>{this.props.book.title}</h3>
-          <b>Author:</b> <span>{this.props.book.author}</span>
-          <br></br>
-          <b>Pages:</b> <span>{this.props.book.pages}</span>
-          <br></br>
-          <input type="button" onClick={this.handleInput} value="Toggle book description" />
-          <br></br>
-          <span style={{ display: desc_display }}>{this.props.book.desc}</span>
+        <div style={{ paddingLeft: "2rem" }}>
+          <BoldText>{this.props.book.title}</BoldText>
+          <div>
+            <BoldText>Author:</BoldText> <Text>{this.props.book.author}</Text>
+          </div>
+          <div>
+            <BoldText>Pages:</BoldText> <Text>{this.props.book.pages}</Text>
+          </div>
+          <div>
+            <input type="button" onClick={this.handleInput} value="Toggle book description" />
+          </div>
+          <Text style={{ display: desc_display }}>{this.props.book.desc}</Text>
         </div>
       </View>
     );
   }
+}
+
+function BoldText({ children }) {
+  return <span style={{ fontWeight: 'bold' }}>{children}</span>;
 }
 
 const styles = StyleSheet.create({
