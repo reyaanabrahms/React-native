@@ -2,7 +2,8 @@
     {
         "id": "1",
         "name": "MGlolenstine",
-        "currently_reading": "4",
+        "currently_reading": "5",
+        "currently_on_page": 123,
         "books_read": {
             "1": {
                 "time_spent": 12343,
