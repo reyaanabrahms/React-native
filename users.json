@@ -2,7 +2,7 @@
     {
         "id": "1",
         "name": "MGlolenstine",
-        "currently_reading": "5",
+        "currently_reading": 62281,
         "currently_on_page": 123,
         "books_read": {
             "1": {
@@ -10,17 +10,17 @@
                 "completed": true,
                 "rating": 5
             },
-            "2": {
+            "11": {
                 "time_spent": 12343,
                 "completed": false,
                 "rating": 5
             },
-            "3": {
+            "13": {
                 "time_spent": 12343,
                 "completed": true,
                 "rating": 5
             },
-            "4": {
+            "15": {
                 "time_spent": 12343,
                 "completed": false,
                 "rating": 5
