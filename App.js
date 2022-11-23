@@ -1,15 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { useParams } from "react-router-dom";
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { MainPage } from './Screens/MainPage';
+import { HistoryScreen } from './Screens/HistoryScreen';
+import { GenreScreen } from './Screens/GenreScreen';
 import React from 'react';
 
-
-
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const MyStack = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer independent={true} >
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
@@ -25,7 +27,7 @@ const MyStack = () => {
 
 export default MyStack;
 
-class User extends React.Component {
+export class User extends React.Component {
   render() {
     let user = users[0];
     let book_id = user.currently_reading;
@@ -73,170 +75,10 @@ class User extends React.Component {
   }
 }
 
-let number_of_pages = 3;
+export const all_books = require('./books.json');
+export const users = require('./users.json');
 
-class Navbar extends React.Component {
-  state = {
-    page: 0,
-  }
-
-  handleInput = _ => {
-    this.setState({ page: (this.state.page + 1) % number_of_pages });
-  };
-
-  render() {
-    if (this.state.page == 0) {
-      return (
-        <View>
-          <button onClick={this.handleInput}>Genres</button>
-          <User></User>
-          <Text>Book collection</Text>
-          <SearchBar></SearchBar>
-          <StatusBar style="auto" />
-        </View>
-      );
-    } else if (this.state.page == 1) {
-      return (
-        <View style={styles.searchBar}>
-          <button onClick={this.handleInput}>History</button>
-          <GenrePage></GenrePage>
-        </View>
-      );
-    } else if (this.state.page == 2) {
-      return (
-        <View style={styles.searchBar}>
-          <button onClick={this.handleInput}>Main screen</button>
-          <HistoryPage></HistoryPage>
-        </View>
-      );
-    }
-  }
-}
-
-class GenrePage extends React.Component {
-  state = {
-    all_read_books: [],
-    genre_stats: {},
-  }
-
-  render() {
-    // Fill all_read_books with all books read by all users
-    for (let user of users) {
-      let read_books = Object.keys(user.books_read).map((a) => {
-        return Number(a);
-      });
-      let read_books_objects = all_books.filter(book => {
-        return read_books.includes(book.id);
-      });
-      this.state.all_read_books = this.state.all_read_books.concat(read_books_objects);
-    }
-    console.log(this.state.all_read_books);
-
-    // Fill genre_stats with all genres and their counts
-    for (let book of this.state.all_read_books) {
-      for (let genre of book.genres) {
-        if (genre in this.state.genre_stats) {
-          this.state.genre_stats[genre] += 1;
-        } else {
-          this.state.genre_stats[genre] = 1;
-        }
-      }
-    }
-    console.log(this.state.genre_stats);
-
-    // Create a table showing all genres and their counts sorted by count
-    let genre_table = [];
-    for (let genre in this.state.genre_stats) {
-      genre_table.push([genre, this.state.genre_stats[genre]]);
-    }
-    genre_table.sort((a, b) => {
-      return b[1] - a[1];
-    }
-    );
-    console.log(genre_table);
-
-    // Generate a HTML table from the genre_table
-    let table = [];
-    let genre_num = 0
-    while (genre_table.length >  genre_num) {
-      let genre = genre_table[genre_num];
-      table.push(<tr><td>{genre[0]}</td><td>{genre[1]}</td></tr>);
-      genre_num += 1;
-    }
-    return (
-      <View>
-        <Text>Genre stats</Text>
-        <table>
-          <tbody>
-            <tr>
-              <th>Genre</th>
-              <th>Count</th>
-            </tr>
-            {table}
-          </tbody>
-        </table>
-      </View>
-    );
-  }
-}
-
-
-class HistoryPage extends React.Component {
-  state = {
-    read_books: [],
-  }
-
-  render() {
-    // Show all books read by user
-    let user = users[0];
-    let read_books = Object.keys(user.books_read).map((a) => {
-      return Number(a);
-    });
-    let read_books_objects = all_books.filter(book => {
-      return read_books.includes(book.id);
-    });
-    console.log(read_books_objects);
-    return (
-      <View>
-        <Text>History</Text>
-        {read_books_objects.map(book => (
-          <Book key={book.id} book={book}></Book>
-        ))}
-      </View>
-    );
-  }
-}
-
-class SearchBar extends React.Component {
-  state = {
-    query: "",
-    search: "",
-  };
-
-  handleInput = event => {
-    this.setState({ query: event.target.value });
-  };
-
-  filterBooks = event => {
-    event.preventDefault();
-    this.setState({ search: this.state.query, query: "" });
-  };
-
-  render() {
-    return (
-      <View style={styles.searchBar}>
-        <input type="text" onChange={this.handleInput} placeholder="Search..." />
-        <button onClick={this.filterBooks}>Search</button>
-        <BookList filter={this.state.search}></BookList>
-      </View>
-    );
-  }
-}
-
-const all_books = require('./books.json');
-const users = require('./users.json');
-
-class BookList extends React.Component {
+export class BookList extends React.Component {
   render() {
     let filtered_books = all_books.filter(book => {
       return book.title.toLowerCase().includes(this.props.filter.toLowerCase());
@@ -252,7 +94,7 @@ class BookList extends React.Component {
   }
 }
 
-class Book extends React.Component {
+export class Book extends React.Component {
   state = {
     show: false,
   };

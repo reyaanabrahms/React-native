@@ -1,212 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { useParams } from "react-router-dom";
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MyStack from '../App';
+import { User, all_books } from '../App';
 
-const MainPage = (navigation) => {
-    return(
-        <view style={{flex:1,justifyContent :'center',alignItems:'center'}}>
-        <Text>Home Page</Text>
-        <button onPress = {()=>navigation.navigation('History')}title='History Page'></button>
-        <button onPress = {()=>navigation.navigation('Genre')}title='Genre Page'></button>
-    </view>
-    )
-    
-}
-
-export default function MainPage() {
+export let MainPage = (navigation) => {
   return (
-    <View style={styles.container}>
-      <Navbar></Navbar>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Home Page</Text>
+      <button onClick={() => navigation.navigation.replace('History')}>History Page</button>
+      <button onClick={() => navigation.navigation.replace('Genre')}>Genre Page</button>
+      <User></User>
+      <Text>Book collection</Text>
+      <SearchBar></SearchBar>
     </View>
   );
 }
-
-
-class User extends React.Component {
-  render() {
-    let user = users[0];
-    let book_id = user.currently_reading;
-    let book = all_books.filter(book => {
-      return book.id == book_id;
-    })[0];
-
-    console.log(user.books_read);
-    let read_books = Object.keys(user.books_read).map((a) => {
-      return Number(a);
-    });
-    console.log(read_books);
-
-    let read_books_objects = all_books.filter(book => {
-      return read_books.includes(book.id);
-    });
-    let pages_read = 0;
-    console.log(read_books_objects);
-    for (let a of read_books_objects) {
-      pages_read += a.pages;
-    }
-
-    let average_pages_read = pages_read / read_books.length;
-
-    if (book == undefined) {
-      return (
-        <View style={styles.searchBar}>
-          <Text>{user.name}</Text>
-          <Text>All pages read: {pages_read}</Text>
-          <Text>Avg pages read: {average_pages_read}</Text>
-          <Text>Not reading a book right now.</Text>
-        </View>
-      );
-    } else {
-      console.log(book);
-      return (
-        <View style={styles.searchBar}>
-          <Text>{user.name}</Text>
-          <Text>All pages read: {pages_read}</Text>
-          <Text>Avg pages read: {average_pages_read}</Text>
-          <Book key={book_id} book={book}></Book>
-        </View>
-      );
-    }
-  }
-}
-
-// let number_of_pages = 3;
-
-// class Navbar extends React.Component {
-//   state = {
-//     page: GenrePage,HistoryPage,
-//   }
-
-//   handleInput = _ => {
-//     this.setState({ page: (this.state.page + 1) % number_of_pages });
-//   };
-
-//   render() {
-//     if (this.state.page == app) {
-//       return (
-//         <View>
-//           <button onClick={this.handleInput}>Genres</button>
-//           <User></User>
-//           <Text>Book collection</Text>
-//           <SearchBar></SearchBar>
-//           <StatusBar style="auto" />
-//         </View>
-//       );
-//     } else if (this.state.page == HistoryPage) {
-//       return (
-//         <View style={styles.searchBar}>
-//           <button onClick={this.handleInput}>History</button>
-//           <GenrePage></GenrePage>
-//         </View>
-//       );
-//     } else if (this.state.page == GenrePage) {
-//       return (
-//         <View style={styles.searchBar}>
-//           <button onClick={this.handleInput}>Main screen</button>
-//           <HistoryPage></HistoryPage>
-//         </View>
-//       );
-//     }
-//   }
-// }
-
-// class GenrePage extends React.Component {
-//   state = {
-//     all_read_books: [],
-//     genre_stats: {},
-//   }
-
-//   render() {
-//     // Fill all_read_books with all books read by all users
-//     for (let user of users) {
-//       let read_books = Object.keys(user.books_read).map((a) => {
-//         return Number(a);
-//       });
-//       let read_books_objects = all_books.filter(book => {
-//         return read_books.includes(book.id);
-//       });
-//       this.state.all_read_books = this.state.all_read_books.concat(read_books_objects);
-//     }
-//     console.log(this.state.all_read_books);
-
-//     // Fill genre_stats with all genres and their counts
-//     for (let book of this.state.all_read_books) {
-//       for (let genre of book.genres) {
-//         if (genre in this.state.genre_stats) {
-//           this.state.genre_stats[genre] += 1;
-//         } else {
-//           this.state.genre_stats[genre] = 1;
-//         }
-//       }
-//     }
-//     console.log(this.state.genre_stats);
-
-//     // Create a table showing all genres and their counts sorted by count
-//     let genre_table = [];
-//     for (let genre in this.state.genre_stats) {
-//       genre_table.push([genre, this.state.genre_stats[genre]]);
-//     }
-//     genre_table.sort((a, b) => {
-//       return b[1] - a[1];
-//     }
-//     );
-//     console.log(genre_table);
-
-//     // Generate a HTML table from the genre_table
-//     let table = [];
-//     let genre_num = 0
-//     while (genre_table.length >  genre_num) {
-//       let genre = genre_table[genre_num];
-//       table.push(<tr><td>{genre[0]}</td><td>{genre[1]}</td></tr>);
-//       genre_num += 1;
-//     }
-//     return (
-//       <View>
-//         <Text>Genre stats</Text>
-//         <table>
-//           <tbody>
-//             <tr>
-//               <th>Genre</th>
-//               <th>Count</th>
-//             </tr>
-//             {table}
-//           </tbody>
-//         </table>
-//       </View>
-//     );
-//   }
-// }
-
-
-// class HistoryPage extends React.Component {
-//   state = {
-//     read_books: [],
-//   }
-
-//   render() {
-//     // Show all books read by user
-//     let user = users[0];
-//     let read_books = Object.keys(user.books_read).map((a) => {
-//       return Number(a);
-//     });
-//     let read_books_objects = all_books.filter(book => {
-//       return read_books.includes(book.id);
-//     });
-//     console.log(read_books_objects);
-//     return (
-//       <View>
-//         <Text>History</Text>
-//         {read_books_objects.map(book => (
-//           <Book key={book.id} book={book}></Book>
-//         ))}
-//       </View>
-//     );
-//   }
-// }
 
 class SearchBar extends React.Component {
   state = {
@@ -233,9 +40,6 @@ class SearchBar extends React.Component {
     );
   }
 }
-
-const all_books = require('../books.json');
-const users = require('../users.json');
 
 class BookList extends React.Component {
   render() {
