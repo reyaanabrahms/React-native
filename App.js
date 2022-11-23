@@ -3,13 +3,27 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useParams } from "react-router-dom";
 import React from 'react';
 
-export default function App() {
+
+
+const Stack = createNativeStackNavigator();
+
+const MyStack = () => {
   return (
-    <View style={styles.container}>
-      <Navbar></Navbar>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={MainPage}
+          options={{ title: "Welcome" }}
+        />
+        <Stack.Screen name="History" component={HistoryScreen} />
+        <Stack.Screen name="Genre" component={GenreScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
+
+export default MyStack;
 
 class User extends React.Component {
   render() {
@@ -63,7 +77,7 @@ let number_of_pages = 3;
 
 class Navbar extends React.Component {
   state = {
-    page: 2,
+    page: 0,
   }
 
   handleInput = _ => {
